@@ -21,12 +21,12 @@ label {
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 98%; /* Set the width to 100% to span the entire viewport */
+    width: 98%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px; /* Optional padding for spacing from the edges */
-    background-color: #fff; /* Optional background color */
+    padding: 10px; 
+    background-color: #fff; 
 }
 
 .gif-container .gif {
@@ -34,6 +34,6 @@ label {
 }
 
 .gif {
-    max-width: 25%; /* Adjust the maximum width as needed */
-    height: auto; /* Maintain aspect ratio */
+    max-width: 25%; 
+    height: auto;
 }

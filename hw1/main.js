@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         if (keyboardFrequencyMap[key] && !activeOscillators[key]) {
             playNote(key);
             addGif()
+            console.log('Added ' + currentGifIndex)
         }
     }
 
@@ -58,11 +59,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var current = activeGainNodes[key].gain.value
             activeGainNodes[key].gain.cancelScheduledValues(audioCtx.currentTime)
             activeGainNodes[key].gain.setTargetAtTime(0, audioCtx.currentTime, 0.015) // release
+            removeGif()
             setTimeout(function(){
                 activeOscillators[key].stop();
                 delete activeGainNodes[key]
                 delete activeOscillators[key];
-                removeGif()
+                console.log('Removed ' + currentGifIndex)
             },70)
             
         }
@@ -76,8 +78,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function removeGif() {
-        gifs[currentGifIndex].style.display = 'none';
-        if (currentGifIndex > 0) {
+        if (currentGifIndex >= 0) {
+            gifs[currentGifIndex].style.display = 'none';
             currentGifIndex -= 1
         }
 
@@ -100,14 +102,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         // for polyphony, lower the sustain gain for each node 
         Object.keys(activeGainNodes).forEach((key) => {
-            activeGainNodes[key].gain.setTargetAtTime(0.4 / num, audioCtx.currentTime, 0.1)
+            activeGainNodes[key].gain.setTargetAtTime(0.2 / num, audioCtx.currentTime, 0.1)
 
         })
 
         gainNode.gain.setValueAtTime(0, audioCtx.currentTime)
         gainNode.gain.setTargetAtTime(0.8 / num, audioCtx.currentTime, 0.2); // attack
         // gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-        gainNode.gain.setTargetAtTime(0.4 / num, audioCtx.currentTime, 0.1) // sustain
+        gainNode.gain.setTargetAtTime(0.2 / num, audioCtx.currentTime, 0.1) // sustain
 
 
         activeOscillators[key] = osc
