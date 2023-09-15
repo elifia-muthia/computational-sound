@@ -1,7 +1,15 @@
 document.addEventListener("DOMContentLoaded", function(event) {
 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const gifs = document.querySelectorAll('.gif')
+    let currentGifIndex = -1
 
+    const globalGain = audioCtx.createGain();
+    globalGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+    globalGain.connect(audioCtx.destination);
+
+    const waveform = document.getElementById('wave-form')
+    
     const keyboardFrequencyMap = {
         '90': 261.625565300598634,  //Z - C
         '83': 277.182630976872096, //S - C#
@@ -29,32 +37,82 @@ document.addEventListener("DOMContentLoaded", function(event) {
         '85': 987.766602512248223,  //U - B
     }
 
+
     window.addEventListener('keydown', keyDown, false);
     window.addEventListener('keyup', keyUp, false);
 
     activeOscillators = {}
+    activeGainNodes = {}
 
     function keyDown(event) {
         const key = (event.detail || event.which).toString();
         if (keyboardFrequencyMap[key] && !activeOscillators[key]) {
-        playNote(key);
+            playNote(key);
+            addGif()
         }
     }
 
     function keyUp(event) {
         const key = (event.detail || event.which).toString();
         if (keyboardFrequencyMap[key] && activeOscillators[key]) {
-            activeOscillators[key].stop();
-            delete activeOscillators[key];
+            var current = activeGainNodes[key].gain.value
+            activeGainNodes[key].gain.cancelScheduledValues(audioCtx.currentTime)
+            activeGainNodes[key].gain.setTargetAtTime(0, audioCtx.currentTime, 0.015) // release
+            setTimeout(function(){
+                activeOscillators[key].stop();
+                delete activeGainNodes[key]
+                delete activeOscillators[key];
+                removeGif()
+            },70)
+            
         }
+    }
+
+    function addGif() {
+        if (currentGifIndex < 3) {
+            currentGifIndex += 1
+            gifs[currentGifIndex].style.display = 'block';
+        }
+    }
+
+    function removeGif() {
+        gifs[currentGifIndex].style.display = 'none';
+        if (currentGifIndex > 0) {
+            currentGifIndex -= 1
+        }
+
     }
 
     function playNote(key) {
         const osc = audioCtx.createOscillator();
         osc.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime)
-        osc.type = 'sine' //choose your favorite waveform
-        osc.connect(audioCtx.destination)
+
+        const change = waveform.value 
+        console.log(change)
+        osc.type = change
+        
+        const gainNode = audioCtx.createGain();
+        
+        osc.connect(gainNode).connect(globalGain).connect(audioCtx.destination)
         osc.start();
+
+        num = Object.keys(activeGainNodes).length + 1 // num of active gain nodes
+
+        // for polyphony, lower the sustain gain for each node 
+        Object.keys(activeGainNodes).forEach((key) => {
+            activeGainNodes[key].gain.setTargetAtTime(0.4 / num, audioCtx.currentTime, 0.1)
+
+        })
+
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime)
+        gainNode.gain.setTargetAtTime(0.8 / num, audioCtx.currentTime, 0.2); // attack
+        // gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gainNode.gain.setTargetAtTime(0.4 / num, audioCtx.currentTime, 0.1) // sustain
+
+
         activeOscillators[key] = osc
+        activeGainNodes[key] = gainNode
+
+        
     }
 })

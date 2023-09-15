@@ -1,0 +1,39 @@
+
+.menu-container {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 40px;
+}
+
+#wave-form {
+    font-size: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.gif-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 98%; /* Set the width to 100% to span the entire viewport */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px; /* Optional padding for spacing from the edges */
+    background-color: #fff; /* Optional background color */
+}
+
+.gif-container .gif {
+    display: none;
+}
+
+.gif {
+    max-width: 25%; /* Adjust the maximum width as needed */
+    height: auto; /* Maintain aspect ratio */
+}

@@ -3,12 +3,29 @@
 
 <head>
     <meta charset="utf-8">
-    <title> Hello web audio </title>
+    <title> HW1 </title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <button>Play</button>
-    <p>This demonstrates how to play a single tone.</p>
+    <div class="menu-container">
+        <label for="wave-form">Choose Waveform:</label> 
+        <select name="wave-form" id="wave-form"> 
+            <option value="sine" selected>Sine</option> 
+            <option value="sawtooth">Sawtooth</option> 
+            <option value="square">Square</option> 
+            <option value="triangle">Triangle</option> 
+        </select>
+    </div>
+    
+
+    <div class="gif-container">
+        <img class="gif" id="gif1" src="images/gif1.gif" alt="GIF 1">
+        <img class="gif" id="gif2" src="images/gif2.gif" alt="GIF 2">
+        <img class="gif" id="gif3" src="images/gif3.gif" alt="GIF 3">
+        <img class="gif" id="gif4" src="images/gif4.gif" alt="GIF 4">
+    </div>
+    
 </body>
 <script src="main.js"></script>
 
