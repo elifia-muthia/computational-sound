@@ -52,15 +52,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
     function keyUp(event) {
         const key = (event.detail || event.which).toString();
         if (keyboardFrequencyMap[key] && activeOscillators[key]) {
+            // var current = activeGainNodes[key].gain.value
             activeGainNodes[key].gain.cancelScheduledValues(audioCtx.currentTime)
+            // activeGainNodes[key].gain.setValueAtTime(current, audioCtx.currentTime)
             activeGainNodes[key].gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.05) // release
             removeGif()
             setTimeout(function(){
+                activeGainNodes[key].gain.setValueAtTime(0, audioCtx.currentTime)
                 activeOscillators[key].stop();
                 delete activeGainNodes[key]
                 delete activeOscillators[key];
                 console.log('Removed ' + currentGifIndex)
-            },50)
+            },70)
             
         }
     }
@@ -81,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function playNote(key) {
+        //
         const osc = audioCtx.createOscillator();
         osc.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime)
 
@@ -88,28 +92,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.log(change)
         osc.type = change
         
-    
-        num = Object.keys(activeGainNodes).length + 1 // num of active gain nodes
-
-        // for polyphony, lower the sustain gain for each node 
-        Object.keys(activeGainNodes).forEach((key) => {
-            activeGainNodes[key].gain.setTargetAtTime(0.4 / num, audioCtx.currentTime, 0.1)
-
-        })
-
         const gainNode = audioCtx.createGain();
         
         gainNode.gain.setValueAtTime(0, audioCtx.currentTime)
         osc.connect(gainNode).connect(audioCtx.destination)
         osc.start();
-
-        gainNode.gain.setTargetAtTime(0.8 / num, audioCtx.currentTime, 0.1); // attack
-        // gainNode.gain.setValueAtTime(0.6, audioCtx.currentTime+0.3);
-        gainNode.gain.setTargetAtTime(0.4 / num, audioCtx.currentTime, 0.5) // sustain
-
-
+        
         activeOscillators[key] = osc
         activeGainNodes[key] = gainNode
+
+        num = Object.keys(activeGainNodes).length // num of active gain nodes 
+
+        // for polyphony, lower the sustain gain for each active node 
+        Object.keys(activeGainNodes).forEach((key) => {
+            activeGainNodes[key].gain.setTargetAtTime(0.8 / num, audioCtx.currentTime, 0.2)
+
+        })
+
+        gainNode.gain.setTargetAtTime(0.4 / num, audioCtx.currentTime+0.2, 0.1) 
+
+    
+
+        
 
         
     }
