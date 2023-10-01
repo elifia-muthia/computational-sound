@@ -1,16 +1,7 @@
 
-.waveform-container {
+.menu-container {
     position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-size: 40px;
-}
-
-.synth-container {
-    position: absolute;
-    top: 30%;
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -18,11 +9,7 @@
 }
 
 #wave-form {
-    font-size: 15px;
-}
-
-#synth-mode {
-    font-size: 15px;
+    font-size: 20px;
 }
 
 label {
