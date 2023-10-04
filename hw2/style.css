@@ -1,60 +1,27 @@
-
-.waveform-container {
-    position: absolute;
-    top: 10%;
-    left: 20%;
-    transform: translate(-50%, -50%);
+body {
     text-align: center;
-    font-size: 40px;
-}
+    font-family: Arial, sans-serif;
+  }
+  
 
-.synth-container {
-    position: absolute;
-    top: 30%;
-    left: 20%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-size: 40px;
-}
+  .radio_buttons {
+    margin: 20px 0;
+  }
+  
+  .radio_buttons label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
 
-.controls-container {
-    position: absolute;
-    top: 20%;
-    left: 80%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
+  select {
+    padding: 5px;
+    font-size: 16px;
+  }
+  
 
-#wave-form {
-    font-size: 15px;
-}
-
-#synth-mode {
-    font-size: 15px;
-}
-
-label {
+  input[type="range"] {
+    width: 80%;
+    margin: 0 auto;
     display: block;
-    margin-bottom: 10px;
-}
-
-.gif-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 98%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px; 
-    background-color: #fff; 
-}
-
-.gif-container .gif {
-    display: none;
-}
-
-.gif {
-    max-width: 25%; 
-    height: auto;
-}
+  }

@@ -3,63 +3,39 @@
 
 <head>
     <meta charset="utf-8">
-    <title> Keyboard </title>
+    <title> HW2 </title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <div class="waveform-container">
-        <label for="wave-form">Choose Waveform:</label> 
-        <select name="wave-form" id="wave-form"> 
-            <option value="sine" selected>Sine</option> 
-            <option value="sawtooth">Sawtooth</option> 
-            <option value="square">Square</option> 
-            <option value="triangle">Triangle</option> 
-        </select>
+    <div class="radio_buttons">
+        <form id="select_synth">
+            <input type="radio" id="additive" name="synth" value="additive" checked="checked">
+            <label for="add">Additive</label>
+            <input type="radio" id="am" name="synth" value="am">
+            <label for="am">AM</label>
+            <input type="radio" id="fm" name="synth" value="fm">
+            <label for="fm">FM</label>
+        </form>
+    </div><br>
+    <div>
+        <select name="partials" id="partials" onchange="changePartials()">
+        <option value=0>0</option>
+        <option value=1>1</option>
+        <option value=2>2</option>
+        <option value=3>3</option>
+    </select> Partials
+    </div> <br>
+    <div>
+        <input id="modfreqSlider" type="range" min=1 max=1000 value="100" oninput="updateModFreq(this.value)" onchange="updateModFreq(this.value)"> </input>Mod Frequency
+    </div><br>
+    <div>
+         <input id="indexSlider" type="range" min=1 max=1000 value=100 oninput="updateIndex(this.value)" onchange="updateIndex(this.value)"> </input>Mod Index <br>
+    </div><br>
+    <div>
+        <input id="lfoSlider" type="range" min=0 max=20 step="0.5" value="0" oninput="updateLFO(this.value)" onchange="updateLFO(this.value)"> </input>LFO Frequency <br>
     </div>
-
-    <div class="synth-container">
-        <label for="synth-mode">Choose Synth Mode:</label> 
-        <select name="synth-mode" id="synth-mode"> 
-            <option value="default" selected>None</option> 
-            <option value="additive">Additive Synthesis</option> 
-            <option value="am">AM Synthesis</option> 
-            <option value="fm">FM Synthesis</option> 
-        </select>
-    </div>
-
-    <div class="controls-container">
-        <div>
-            <select name="partials" id="partials" onchange="changePartials()">
-            <option value=0>0</option>
-            <option value=1>1</option>
-            <option value=2>2</option>
-            <option value=3>3</option>
-            <option value=4>4</option>
-        </select> Partials
-        </div> <br>
-        <div>
-            <input id="modfreqSlider" type="range" min=1 max=1000 oninput="updateModFreq(this.value)" onchange="updateModFreq(this.value)"> </input>Mod Frequency
-        </div><br>
-        <div>
-            <input id="indexSlider" type="range" min=1 max=1000 oninput="updateIndex(this.value)" onchange="updateIndex(this.value)"> </input>Mod Index <br>
-        </div><br>
-        
-        <div>
-            <button id ="lfo" onclick="lfoToggle()">LFO</button>
-        </div><br>
-        
-        <div>
-            <input id="lfoSlider" type="range" min=1 max=20 oninput="updateLFO(this.value)" onchange="updateLFO(this.value)"> </input>LFO Frequency <br>
-        </div>
-    </div>
-
-    <div class="gif-container">
-        <img class="gif" id="gif1" src="images/gif1.gif" alt="GIF 1">
-        <img class="gif" id="gif2" src="images/gif2.gif" alt="GIF 2">
-        <img class="gif" id="gif3" src="images/gif3.gif" alt="GIF 3">
-        <img class="gif" id="gif4" src="images/gif4.gif" alt="GIF 4">
-    </div>
+    
     
 </body>
 <script src="main.js"></script>
