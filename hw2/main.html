@@ -8,33 +8,58 @@
 </head>
 
 <body>
+    <div class="menu-container">
+        <label for="wave-form">Choose Waveform:</label> 
+        <select name="wave-form" id="wave-form"> 
+            <option value="sine" selected>Sine</option> 
+            <option value="sawtooth">Sawtooth</option> 
+            <option value="square">Square</option> 
+            <option value="triangle">Triangle</option> 
+        </select>
+    </div>
+
     <div class="radio_buttons">
+        <label for="wave-form">Choose Synth Mode:</label> 
         <form id="select_synth">
             <input type="radio" id="additive" name="synth" value="additive" checked="checked">
-            <label for="add">Additive</label>
+            <label for="add" selected>Additive</label>
             <input type="radio" id="am" name="synth" value="am">
             <label for="am">AM</label>
             <input type="radio" id="fm" name="synth" value="fm">
             <label for="fm">FM</label>
         </form>
     </div><br>
-    <div>
+    <div id="partialsContainer">
+        <label for="partials">Number of Partials:</label>
         <select name="partials" id="partials" onchange="changePartials()">
         <option value=0>0</option>
         <option value=1>1</option>
         <option value=2>2</option>
         <option value=3>3</option>
-    </select> Partials
+        <option value=4>4</option>
+        <option value=5>5</option>
+    </select>
     </div> <br>
-    <div>
-        <input id="modfreqSlider" type="range" min=1 max=1000 value="100" oninput="updateModFreq(this.value)" onchange="updateModFreq(this.value)"> </input>Mod Frequency
+
+    <div id="modfreqContainer">
+        <label for="modfreqValue">Mod Frequency:</label>
+        <input id="modfreqValue" type="number" min="1" max="1000" value="100">
+        <button onclick="decrementValue('modfreqValue')">-</button>
+        <button onclick="incrementValue('modfreqValue')">+</button>
     </div><br>
-    <div>
-         <input id="indexSlider" type="range" min=1 max=1000 value=100 oninput="updateIndex(this.value)" onchange="updateIndex(this.value)"> </input>Mod Index <br>
+    <div id="indexContainer">
+        <label for="indexValue">Mod Index:</label>
+        <input id="indexValue" type="number" min="1" max="1000" value="100">
+        <button onclick="decrementValue('indexValue')">-</button>
+        <button onclick="incrementValue('indexValue')">+</button>
     </div><br>
-    <div>
-        <input id="lfoSlider" type="range" min=0 max=20 step="0.5" value="0" oninput="updateLFO(this.value)" onchange="updateLFO(this.value)"> </input>LFO Frequency <br>
+    <div id="lfoContainer">
+        <label for="lfoValue">LFO Frequency:</label>
+        <input id="lfoValue" type="number" min="0" max="20" step="0.5" value="0">
+        <button onclick="decrementValue('lfoValue')">-</button>
+        <button onclick="incrementValue('lfoValue')">+</button>
     </div>
+
     
     
 </body>

@@ -6,37 +6,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // const waveform = document.getElementById('wave-form')
-
     var synthMode = document.getElementById("select_synth").synth
-    lfoButton = document.getElementById("lfo")
-    var indexSlider = document.getElementById("indexSlider")
+    var partialsContainer = document.getElementById("partialsContainer");
     var partialSelect = document.getElementById("partials")
-    var modSlider = document.getElementById("modfreqSlider")
-    lfoSlider = document.getElementById("lfoSlider")
-    indexSlider.disabled = true;
-    modSlider.disabled = true;
-    lfoSlider.disabled = false;
+    var modfreqContainer = document.getElementById("modfreqContainer");
+    var indexContainer = document.getElementById("indexContainer");
+    var lfoContainer = document.getElementById("lfoContainer");
+
+    const waveform = document.getElementById('wave-form');
+
+    // Hide all containers first
+    partialsContainer.style.display = "block";
+    modfreqContainer.style.display = "none";
+    indexContainer.style.display = "none";
+    lfoContainer.style.display = "block";
 
     for (var i = 0; i < synthMode.length; i++){
         synthMode[i].onclick= function(){
-            
             synthType = this.value;
             if (synthType === 'fm') {
-                indexSlider.disabled = false;
-                partialSelect.disabled = true;
-                modSlider.disabled = false;
+                partialsContainer.style.display = "none";
+                modfreqContainer.style.display = "block";
+                indexContainer.style.display = "block";
+                lfoContainer.style.display = "block";
             }
             else if (synthType === 'additive'){
-                partialSelect.disabled = false;
-                indexSlider.disabled = true;
-                modSlider.disabled = true;
+                partialsContainer.style.display = "block";
+                modfreqContainer.style.display = "none";
+                indexContainer.style.display = "none";
+                lfoContainer.style.display = "block";
+
             }
 
             else{
-                partialSelect.disabled = true;
-                indexSlider.disabled = true;
-                modSlider.disabled = false;
+                partialsContainer.style.display = "none";
+                modfreqContainer.style.display = "block";
+                indexContainer.style.display = "none";
+                lfoContainer.style.display = "block";
             }
         }
     }
@@ -129,12 +135,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
             base.frequency.value = 1 * keyboardFrequencyMap[key]
             base.start();
             base.connect(globalGain)
+            base.type = waveform.value
+            console.log(waveform.value)
             oscillators.push(base)
 
             for (var i = 0; i < partialSelect.value; i++) {
                 var osc = audioCtx.createOscillator();
                 osc.frequency.value = (i+2) * keyboardFrequencyMap[key] + (-1)**i * Math.random() * 15;
                 osc.connect(globalGain);
+                osc.type = waveform.value
                 osc.start();
                 oscillators.push(osc);
             }
@@ -163,6 +172,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
             modulatorFreq.frequency.setValueAtTime(modFreqVal, audioCtx.currentTime);
             carrier.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime)
 
+            carrier.type = waveform.value;
+            modulatorFreq.type = waveform.value;
+
             console.log(modulatorFreq)
 
             const modulated = audioCtx.createGain();
@@ -185,6 +197,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var lfo = audioCtx.createOscillator();
             lfo.frequency.setValueAtTime(lfoFreqVal, audioCtx.currentTime)
             lfo.connect(modulated).connect(modulatorFreq.frequency);
+            lfo.type = waveform.value;
             lfo.start();
             activeOscillators[key].push(lfo)
 
@@ -198,6 +211,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         else if (synthMode.value == 'fm') {
             var fm_carrier = audioCtx.createOscillator();
             var fm_modulatorFreq = audioCtx.createOscillator();
+            fm_carrier.type = waveform.value;
+            fm_modulatorFreq.type = waveform.value;
 
             fm_carrier.frequency.setValueAtTime(keyboardFrequencyMap[key], audioCtx.currentTime)
 
@@ -222,6 +237,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var fm_lfoGain = audioCtx.createGain();
             fm_lfoGain.gain.value = 8;
             fm_lfo.connect(fm_lfoGain).connect(fm_modulatorFreq.frequency);
+            fm_lfo.type = waveform.value;
             fm_lfo.start();
 
             activeOscillators[key] = [fm_carrier, fm_modulatorFreq, fm_lfo]
@@ -247,3 +263,43 @@ function updateModFreq(val) {
 function updateIndex(val) {
     modIndexVal = val
 };
+
+function incrementValue(inputId) {
+    var inputElement = document.getElementById(inputId);
+    var currentValue = parseFloat(inputElement.value);
+    var maxValue = parseFloat(inputElement.getAttribute("max"));
+    if (currentValue < maxValue) {
+        
+
+        if (inputId === 'modfreqValue') {
+            inputElement.value = (currentValue + 10).toString();
+            updateModFreq(inputElement.value);
+        } else if (inputId === 'indexValue') {
+            inputElement.value = (currentValue + 10).toString();
+            updateIndex(inputElement.value);
+        } else if (inputId === 'lfoValue') {
+            inputElement.value = (currentValue + 1).toString();
+            updateLFO(inputElement.value);
+        }
+    }
+}
+
+function decrementValue(inputId) {
+    var inputElement = document.getElementById(inputId);
+    var currentValue = parseFloat(inputElement.value);
+    var minValue = parseFloat(inputElement.getAttribute("min"));
+    if (currentValue > minValue) {
+        
+
+        if (inputId === 'modfreqValue') {
+            inputElement.value = (currentValue - 10).toString();
+            updateModFreq(inputElement.value);
+        } else if (inputId === 'indexValue') {
+            inputElement.value = (currentValue - 10).toString();
+            updateIndex(inputElement.value);
+        } else if (inputId === 'lfoValue') {
+            inputElement.value = (currentValue - 1).toString();
+            updateLFO(inputElement.value);
+        }
+    }
+}
