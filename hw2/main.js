@@ -264,13 +264,90 @@ function updateIndex(val) {
     modIndexVal = val
 };
 
+var lfoValueInput = document.getElementById("lfoValue");
+
+
+lfoValueInput.addEventListener("input", function () {
+    var currentValue = parseFloat(lfoValueInput.value);
+    var minValue = parseFloat(lfoValueInput.min);
+    var maxValue = parseFloat(lfoValueInput.max);
+
+    if (currentValue < minValue) {
+        lfoValueInput.value = minValue;
+    } else if (currentValue > maxValue) {
+        lfoValueInput.value = maxValue;
+    }
+
+    // Update the global variable or call the appropriate function here
+    updateLFO(lfoValueInput.value);
+});
+
+lfoValueInput.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowUp") {
+        incrementValue("lfoValue");
+    } else if (e.key === "ArrowDown") {
+        decrementValue("lfoValue");
+    }
+});
+
+
+var modfreqValueInput = document.getElementById("modfreqValue");
+
+modfreqValueInput.addEventListener("input", function () {
+    var currentValue = parseFloat(modfreqValueInput.value);
+    var minValue = parseFloat(modfreqValueInput.min);
+    var maxValue = parseFloat(modfreqValueInput.max);
+
+    if (currentValue < minValue) {
+        modfreqValueInput.value = minValue;
+    } else if (currentValue > maxValue) {
+        modfreqValueInput.value = maxValue;
+    }
+
+    // Update the global variable or call the appropriate function here
+    updateModFreq(modfreqValueInput.value);
+});
+
+modfreqValueInput.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowUp") {
+        incrementValue("modfreqValue");
+    } else if (e.key === "ArrowDown") {
+        decrementValue("modfreqValue");
+    }
+});
+
+
+var indexValueInput = document.getElementById("indexValue");
+
+indexValueInput.addEventListener("input", function () {
+    var currentValue = parseFloat(indexValueInput.value);
+    var minValue = parseFloat(indexValueInput.min);
+    var maxValue = parseFloat(indexValueInput.max);
+
+    if (currentValue < minValue) {
+        indexValueInput.value = minValue;
+    } else if (currentValue > maxValue) {
+        indexValueInput.value = maxValue;
+    }
+
+    // Update the global variable or call the appropriate function here
+    updateIndex(indexValueInput.value);
+});
+
+indexValueInput.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowUp") {
+        incrementValue("indexValue");
+    } else if (e.key === "ArrowDown") {
+        decrementValue("indexValue");
+    }
+});
+
 function incrementValue(inputId) {
     var inputElement = document.getElementById(inputId);
     var currentValue = parseFloat(inputElement.value);
     var maxValue = parseFloat(inputElement.getAttribute("max"));
     if (currentValue < maxValue) {
         
-
         if (inputId === 'modfreqValue') {
             inputElement.value = (currentValue + 10).toString();
             updateModFreq(inputElement.value);
