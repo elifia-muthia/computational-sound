@@ -1,5 +1,7 @@
 const playBrook = document.getElementById('playBrook');
+const farnell = document.getElementById('playFarnell');
 var audioCtx;
+var audioCtx_farnell;
 
 playBrook.addEventListener('click', function () {
     if (!audioCtx) {
@@ -12,9 +14,21 @@ playBrook.addEventListener('click', function () {
     else if (audioCtx.state === 'running') {
         audioCtx.suspend();
     }
-
-
 }, false);
+
+farnell.addEventListener('click', function () {
+    if (!audioCtx_farnell) {
+        playFarnell();
+        return;
+    }
+    else if (audioCtx_farnell.state === 'suspended') {
+        audioCtx_farnell.resume();
+    }
+    else if (audioCtx_farnell.state === 'running') {
+        audioCtx_farnell.suspend();
+    }
+}, false);
+
 
 function playBabblingBrook() {
     console.log("Babbling Brook");
@@ -69,56 +83,71 @@ function playBabblingBrook() {
 }
 
 
-function playWave() {
-    console.log("Wave");
+function playFarnell() {
+    console.log("Part 2");
 
-    audioCtx = new AudioContext()
+    audioCtx_farnell = new AudioContext();
 
-    var bufferSize = 10 * audioCtx.sampleRate;
-    noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    output = noiseBuffer.getChannelData(0);
-
-    var lastOut = 0;
-    for (var i = 0; i < bufferSize; i++) {
-        var brown = Math.random() * 2 - 1;
-    
-        output[i] = (lastOut + (0.02 * brown)) / 1.02;
-        lastOut = output[i];
-        output[i] *= 3.5;
+    // white noise
+    var bufferSize = 10 * audioCtx_farnell.sampleRate,
+        noiseBuffer = audioCtx_farnell.createBuffer(1, bufferSize, audioCtx_farnell.sampleRate),
+        output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+        output[i] = (Math.random() * 2 - 1) * 0.5;
     }
+    whiteNoise = audioCtx_farnell.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
+    whiteNoise.loop = true;
+    whiteNoise.start(0);
 
-    const lowPassFilter = audioCtx.createBiquadFilter();
-    lowPassFilter.type = 'lowpass';
-    lowPassFilter.frequency.value = 2000;
-    lowPassFilter.Q.value = 1;
+    /* HISSING */
 
-    const highPassFilter = audioCtx.createBiquadFilter();
-    highPassFilter.type = 'highpass';
-    highPassFilter.frequency.value = 200;
+    const gain_oscillator = audioCtx_farnell.createOscillator()
+    gain_oscillator.type = "triangle"
+    gain_oscillator.frequency.value = 0.5
 
-    const modulationOscillator = audioCtx.createOscillator();
-    modulationOscillator.type = 'sine';
-    modulationOscillator.frequency.value = 0.1; 
+    const envelopeOscillator = audioCtx_farnell.createOscillator();
+    envelopeOscillator.type = "sine"; // You can use a sine wave for smooth modulation
+    envelopeOscillator.frequency.value = 0.2;
 
-    const amplitudeModulator = audioCtx.createGain();
-    amplitudeModulator.gain.value = 0.2;
+    gain_oscillator.start()
+    envelopeOscillator.start()
 
-    const totalGain = audioCtx.createGain();
-    totalGain.gain.value = 0.1;
+    const gainNode = audioCtx_farnell.createGain();
 
-    brownNoise = audioCtx.createBufferSource();
-    brownNoise.buffer = noiseBuffer;
-    brownNoise.loop = true;
-    brownNoise.start(0);
-    
-    
-    brownNoise.connect(lowPassFilter);
-    lowPassFilter.connect(highPassFilter);
-    highPassFilter.connect(amplitudeModulator);
-    amplitudeModulator.connect(totalGain);
+    envelopeOscillator.connect(gainNode.gain);
+    gain_oscillator.connect(gainNode)
 
-    modulationOscillator.connect(amplitudeModulator.gain);
-    modulationOscillator.start();
+    const hiss_gain = audioCtx_farnell.createGain();
+    const total_hiss_gain = audioCtx_farnell.createGain();
+    total_hiss_gain.gain.value = 0.005
 
-    totalGain.connect(audioCtx.destination);
+    const lpf = audioCtx_farnell.createBiquadFilter();
+    lpf.type = 'lowpass';
+    lpf.frequency.value = 1;
+
+    const hpf = audioCtx_farnell.createBiquadFilter();
+    hpf.type = 'highpass';
+    hpf.frequency.value = 1000;
+
+    whiteNoise.connect(hpf).connect(hiss_gain)
+    whiteNoise.connect(lpf).connect(hiss_gain)
+    gainNode.connect(hiss_gain.gain)
+    hiss_gain.connect(total_hiss_gain).connect(audioCtx_farnell.destination)
+
+
+    /* CRACKLING */
+
+
+
+    /* FLAMES */
+    const flame_bpf = audioCtx_farnell.createBiquadFilter()
+    flame_bpf.type = "bandpass"
+    flame_bpf.frequency.value = 30
+    flame_bpf.Q.value = 5
+
+
+
 }
+
+
