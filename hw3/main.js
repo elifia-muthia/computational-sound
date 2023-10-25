@@ -101,7 +101,6 @@ function playFarnell() {
     whiteNoise.start(0);
 
     /* HISSING */
-
     const gain_oscillator = audioCtx_farnell.createOscillator()
     gain_oscillator.type = "triangle"
     gain_oscillator.frequency.value = 0.5
@@ -136,9 +135,11 @@ function playFarnell() {
     hiss_gain.connect(total_hiss_gain).connect(audioCtx_farnell.destination)
 
 
-    /* CRACKLING */
+    /* CRACKLING 1 */
 
 
+
+    
 
     /* FLAMES */
     const flame_bpf = audioCtx_farnell.createBiquadFilter()
@@ -146,8 +147,29 @@ function playFarnell() {
     flame_bpf.frequency.value = 30
     flame_bpf.Q.value = 5
 
+    const flame_hpf = audioCtx_farnell.createBiquadFilter()
+    flame_hpf.type = 'highpass';
+    flame_hpf.frequency.value = 25
 
+    const flame_clip = audioCtx_farnell.createWaveShaper();
+    var distortion = new Float32Array(2);
+    distortion[0] = -0.9;
+    distortion[1] = 0.9;
+    flame_clip.curve = distortion;
 
+    const flame_hpf2 = audioCtx_farnell.createBiquadFilter()
+    flame_hpf2.type = 'highpass';
+    flame_hpf2.frequency.value = 25
+
+    const flames_gain = audioCtx_farnell.createGain();
+    flames_gain.gain.value = 10;
+
+    whiteNoise.connect(flame_bpf)
+                .connect(flame_hpf)
+                .connect(flame_clip)
+                .connect(flame_hpf2)
+                .connect(flames_gain)
+                .connect(audioCtx_farnell.destination)
 }
 
 
