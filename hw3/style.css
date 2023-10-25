@@ -4,3 +4,29 @@ label {
     font-weight: bold;
     font-size: 40px;
 }
+
+#blog-section {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#blog-section h2 {
+    font-size: 32px;
+    color: #333;
+    margin: 0;
+}
+
+#blog-section h3 {
+    font-size: 26px;
+    color: #333;
+    margin: 0;
+}
+
+#blog-section p {
+    font-size: 18px;
+    color: #777;
+}

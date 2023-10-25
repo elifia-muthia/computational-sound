@@ -101,25 +101,7 @@ function playFarnell() {
     whiteNoise.start(0);
 
     /* HISSING */
-    const gain_oscillator = audioCtx_farnell.createOscillator()
-    gain_oscillator.type = "triangle"
-    gain_oscillator.frequency.value = 0.5
-
-    const envelopeOscillator = audioCtx_farnell.createOscillator();
-    envelopeOscillator.type = "sine"; // You can use a sine wave for smooth modulation
-    envelopeOscillator.frequency.value = 0.2;
-
-    gain_oscillator.start()
-    envelopeOscillator.start()
-
-    const gainNode = audioCtx_farnell.createGain();
-
-    envelopeOscillator.connect(gainNode.gain);
-    gain_oscillator.connect(gainNode)
-
     const hiss_gain = audioCtx_farnell.createGain();
-    const total_hiss_gain = audioCtx_farnell.createGain();
-    total_hiss_gain.gain.value = 0.005
 
     const lpf = audioCtx_farnell.createBiquadFilter();
     lpf.type = 'lowpass';
@@ -131,26 +113,47 @@ function playFarnell() {
 
     whiteNoise.connect(hpf).connect(hiss_gain)
     whiteNoise.connect(lpf).connect(hiss_gain)
+
+    const gain_oscillator = audioCtx_farnell.createOscillator()
+    gain_oscillator.type = "triangle"
+    gain_oscillator.frequency.value = 0.5
+
+    const envelopeOscillator = audioCtx_farnell.createOscillator();
+    envelopeOscillator.type = "sine";
+    envelopeOscillator.frequency.value = 0.2;
+
+    gain_oscillator.start()
+    envelopeOscillator.start()
+
+    const gainNode = audioCtx_farnell.createGain();
+
+    envelopeOscillator.connect(gainNode.gain);
+    gain_oscillator.connect(gainNode)
+
+    const total_hiss_gain = audioCtx_farnell.createGain();
+    total_hiss_gain.gain.value = 0.005
+
     gainNode.connect(hiss_gain.gain)
     hiss_gain.connect(total_hiss_gain).connect(audioCtx_farnell.destination)
-
 
     /* CRACKLING */
     const crackle = audioCtx_farnell.createGain();
     crackle.connect(audioCtx_farnell.destination)
-    crackle.gain.value = 0.05;
 
+    function crackleSound() {
+        const whiteNoise_source = audioCtx_farnell.createBufferSource();
+        whiteNoise_source.buffer = noiseBuffer
+        whiteNoise_source.connect(crackle)
+        whiteNoise_source.start()
+        whiteNoise_source.stop(audioCtx_farnell.currentTime + 0.02)
+    }
 
     setInterval(() => {
         crackle.gain.setValueAtTime(0, audioCtx_farnell.currentTime)
-        crackle.gain.linearRampToValueAtTime(0.5, audioCtx_farnell.currentTime + 0.001)
+        crackle.gain.linearRampToValueAtTime(0.8, audioCtx_farnell.currentTime + 0.001)
         crackle.gain.linearRampToValueAtTime(0, audioCtx_farnell.currentTime + 0.02)
-        
-        const source = audioCtx_farnell.createBufferSource();
-        source.buffer = noiseBuffer
-        source.connect(crackle)
-        source.start()
-        source.stop(audioCtx_farnell.currentTime + 0.02)
+
+        crackleSound()
     }, Math.random() * 100 + 5000)
     
     setInterval(() => {
@@ -158,11 +161,7 @@ function playFarnell() {
         crackle.gain.linearRampToValueAtTime(0.3, audioCtx_farnell.currentTime + 0.001)
         crackle.gain.linearRampToValueAtTime(0, audioCtx_farnell.currentTime + 0.02)
         
-        const source = audioCtx_farnell.createBufferSource();
-        source.buffer = noiseBuffer
-        source.connect(crackle)
-        source.start()
-        source.stop(audioCtx_farnell.currentTime + 0.02)
+        crackleSound()
     }, Math.random() * 100 + 2000)
 
     setInterval(() => {
@@ -170,11 +169,7 @@ function playFarnell() {
         crackle.gain.linearRampToValueAtTime(0.1, audioCtx_farnell.currentTime + 0.001)
         crackle.gain.linearRampToValueAtTime(0, audioCtx_farnell.currentTime + 0.02)
         
-        const source = audioCtx_farnell.createBufferSource();
-        source.buffer = noiseBuffer
-        source.connect(crackle)
-        source.start()
-        source.stop(audioCtx_farnell.currentTime + 0.02)
+        crackleSound()
     }, Math.random() * 100 + 800)
 
     setInterval(() => {
@@ -182,11 +177,7 @@ function playFarnell() {
         crackle.gain.linearRampToValueAtTime(0.05, audioCtx_farnell.currentTime + 0.001)
         crackle.gain.linearRampToValueAtTime(0, audioCtx_farnell.currentTime + 0.02)
         
-        const source = audioCtx_farnell.createBufferSource();
-        source.buffer = noiseBuffer
-        source.connect(crackle)
-        source.start()
-        source.stop(audioCtx_farnell.currentTime + 0.02)
+        crackleSound()
     }, Math.random() * 100 + 680)
 
     setInterval(() => {
@@ -194,11 +185,7 @@ function playFarnell() {
         crackle.gain.linearRampToValueAtTime(0.03, audioCtx_farnell.currentTime + 0.001)
         crackle.gain.linearRampToValueAtTime(0, audioCtx_farnell.currentTime + 0.02)
         
-        const source = audioCtx_farnell.createBufferSource();
-        source.buffer = noiseBuffer
-        source.connect(crackle)
-        source.start()
-        source.stop(audioCtx_farnell.currentTime + 0.02)
+        crackleSound()
     }, Math.random() * 100 + 550)
 
     setInterval(() => {
@@ -206,11 +193,7 @@ function playFarnell() {
         crackle.gain.linearRampToValueAtTime(0.01, audioCtx_farnell.currentTime + 0.001)
         crackle.gain.linearRampToValueAtTime(0, audioCtx_farnell.currentTime + 0.02)
         
-        const source = audioCtx_farnell.createBufferSource();
-        source.buffer = noiseBuffer
-        source.connect(crackle)
-        source.start()
-        source.stop(audioCtx_farnell.currentTime + 0.02)
+        crackleSound()
     }, Math.random() * 100 + 230)
 
 
@@ -235,7 +218,7 @@ function playFarnell() {
     flame_hpf2.frequency.value = 25
 
     const flames_gain = audioCtx_farnell.createGain();
-    flames_gain.gain.value = 5;
+    flames_gain.gain.value = 10;
 
     whiteNoise.connect(flame_bpf)
                 .connect(flame_hpf)
