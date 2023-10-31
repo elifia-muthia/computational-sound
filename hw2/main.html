@@ -9,6 +9,7 @@
 
 <body>
     <div class="menu-container">
+        <p>Use your keyboard to play music</p>
         <label for="wave-form">Choose Waveform:</label> 
         <select name="wave-form" id="wave-form"> 
             <option value="sine" selected>Sine</option> 
@@ -43,11 +44,11 @@
 
     <div id="modfreqContainer">
         <label for="modfreqValue">Mod Frequency:</label>
-        <input id="modfreqValue" type="number" min="1" max="1000" value="100">
+        <input id="modfreqValue" type="number" min="0" max="1000" value="100">
     </div><br>
     <div id="indexContainer">
         <label for="indexValue">Mod Index:</label>
-        <input id="indexValue" type="number" min="1" max="1000" value="100">
+        <input id="indexValue" type="number" min="0" max="1000" value="100">
     </div><br>
     <div id="lfoContainer">
         <label for="lfoValue">LFO Frequency:</label>
