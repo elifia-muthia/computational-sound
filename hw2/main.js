@@ -201,11 +201,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             lfo.start();
             activeOscillators[key].push(lfo)
 
-            Object.keys(activeGainNodes).forEach((key) => {
-                for (var i = 0; i < activeGainNodes[key].length; i++) {
-                    activeGainNodes[key][i].gain.setTargetAtTime(0.9 / (Object.keys(activeGainNodes).length + (2 * Object.keys(activeGainNodes).length)), audioCtx.currentTime, 0.05)
-                }
-            })
         }
 
         else if (synthMode.value == 'fm') {
@@ -219,9 +214,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var fm_modulationIndex = audioCtx.createGain();
             var gainNode = audioCtx.createGain();
 
-            gainNode.gain.setValueAtTime(0.7, audioCtx.currentTime)
+            gainNode.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime, 0.5);
 
-            fm_modulationIndex.gain.value = modIndexVal;
+            // fm_modulationIndex.gain.value = modIndexVal;
+            fm_modulationIndex.gain.linearRampToValueAtTime(modIndexVal, audioCtx.currentTime, 0.5);
             fm_modulatorFreq.frequency.value = modFreqVal;
 
             fm_modulatorFreq.connect(fm_modulationIndex);
@@ -242,6 +238,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             activeOscillators[key] = [fm_carrier, fm_modulatorFreq, fm_lfo]
             activeGainNodes[key] = [fm_modulationIndex, gainNode, fm_lfoGain]
+
         }
         
     }
