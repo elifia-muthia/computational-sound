@@ -60,6 +60,7 @@ function parseCode(code) {
     }
 
     console.log(expression)
+    expression = expression.trim();
 
     //how could we allow for two lines that play at the same time?
     //what if we want variables?
